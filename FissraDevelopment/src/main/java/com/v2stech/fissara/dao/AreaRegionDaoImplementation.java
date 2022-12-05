@@ -29,41 +29,51 @@ public class AreaRegionDaoImplementation {
 			{
 				return connect = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/template_data?autoReconnect=true&useSSL=false",
 						"root", "password");
+				
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return connect;
 	}
-	
-	public List<AreaRegionDetails> getRegionArea() throws SQLException, ClassNotFoundException {
-		List<AreaRegionDetails>regionAreaList = new ArrayList<>();
-	    connect=getConnection();
-		preparedStatement = connect.prepareStatement("select * from template_details");
-		resultSet = preparedStatement.executeQuery();
-		while (resultSet.next()) {
-			AreaRegionDetails regionArea = new AreaRegionDetails();
-			regionArea.setDataName(resultSet.getString(resultSet.getMetaData().getColumnName(2)));
-			System.out.println("RA Data is showing");
-			regionAreaList.add(regionArea);
+	public void connectionTest() throws SQLException, ClassNotFoundException
+	{
+		connect=getConnection();
+		System.out.println("connection created successfully");
+		
 		}
-		return regionAreaList;
-	}
 	
 	
-	public List<TenantPojo> getDatabaseNameList() throws SQLException, ClassNotFoundException {
-		List<TenantPojo>databaseList = new ArrayList<>();
-	    connect=getConnection();
-		preparedStatement = connect.prepareStatement("select * from databasDetails");
-		resultSet = preparedStatement.executeQuery();
-		while (resultSet.next()) {
-			TenantPojo databaseListName= new TenantPojo();
-			databaseListName.setDatabase_name(resultSet.getString(resultSet.getMetaData().getColumnName(2)));
-			System.out.println("Database Data is showing");
-			databaseList.add(databaseListName);
-		}
-		return databaseList;
-	}
+	
+//	public List<AreaRegionDetails> getRegionArea() throws SQLException, ClassNotFoundException {
+//		List<AreaRegionDetails>regionAreaList = new ArrayList<>();
+//	    connect=getConnection();
+//		preparedStatement = connect.prepareStatement("select * from template_details");
+//		resultSet = preparedStatement.executeQuery();
+//		while (resultSet.next()) {
+//			AreaRegionDetails regionArea = new AreaRegionDetails();
+//			regionArea.setDataName(resultSet.getString(resultSet.getMetaData().getColumnName(2)));
+//			System.out.println("RA Data is showing");
+//			regionAreaList.add(regionArea);
+//		}
+//		return regionAreaList;
+//	}
+//	
+	
+//	public List<TenantPojo> getDatabaseNameList() throws SQLException, ClassNotFoundException {
+//		List<TenantPojo>databaseList = new ArrayList<>();
+//	    connect=getConnection();
+//		preparedStatement = connect.prepareStatement("select *from database_details");
+//		resultSet = preparedStatement.executeQuery();
+//		while (resultSet.next()) {
+//			TenantPojo databaseListName= new TenantPojo();
+//			databaseListName.setDatabase_name(resultSet.getString(resultSet.getMetaData().getColumnName(2)));
+//			System.out.println("Database Data is showing");
+//			databaseList.add(databaseListName);
+//		}
+//		return databaseList;
+	//}
+	
 
 
 }

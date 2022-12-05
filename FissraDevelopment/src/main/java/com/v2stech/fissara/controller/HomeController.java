@@ -19,8 +19,9 @@ public class HomeController {
 	
 	@GetMapping("/")
 	public ModelAndView displayHomepage(ModelAndView modelAndView) throws ClassNotFoundException, SQLException  {
-		modelAndView.addObject("regionAreaList", service.getData());
-		modelAndView.addObject("tenantList", service.getTenanat());
+		//modelAndView.addObject("regionAreaList", service.getData());
+		//modelAndView.addObject("tenantList", service.getTenanat());
+		service.testingConnection();
 		modelAndView.setViewName("homepage");
 		return modelAndView;
 	}

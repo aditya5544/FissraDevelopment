@@ -13,14 +13,20 @@ import com.v2stech.fissara.model.TenantPojo;
 public class ServiceImpl {
 	AreaRegionDaoImplementation daoObj = new AreaRegionDaoImplementation();
 
-	public List<AreaRegionDetails> getData() throws ClassNotFoundException, SQLException {
-		return daoObj.getRegionArea();
-
+//	public List<AreaRegionDetails> getData() throws ClassNotFoundException, SQLException {
+//		return daoObj.getRegionArea();
+//
+//	}
+//	
+//	public List<TenantPojo> getTenanat() throws ClassNotFoundException, SQLException {
+//		return daoObj.getDatabaseNameList();
+//
+//	}
+	public void testingConnection() throws ClassNotFoundException, SQLException
+	{
+		daoObj.connectionTest();
+		
 	}
 	
-	public List<TenantPojo > getTenanat() throws ClassNotFoundException, SQLException {
-		return daoObj.getDatabaseNameList();
-
-	}
 
 }
