@@ -17,17 +17,16 @@ public class ServiceImpl {
 	public String getUserCredentials(UserCredentialsDTO credentials) throws InvalidCredentialException {
 		String viewNameString = "";
 		
-		/*
-		 * if (credentials.getUsername()) { List<UserCredentialsDTO> admin =
-		 * jdbcTemplate.query( "select * from adminCredential where adminUserName='" +
-		 * credentials.getUserName() + "'and password='" + credentials.getPassword() +
-		 * "'", new
-		 * BeanPropertyRowMapper<UserCredentialsDTO>(UserCredentialsDTO.class)); if
-		 * (!admin.isEmpty()) { viewNameString = "admin-dashboard-page"; } else { throw
-		 * new InvalidCredentialException("Input Filed are empty"); }
-		 * 
-		 * }
-		 */
+		 if (credentials.getUsername()) { 
+			 List<UserCredentialsDTO> admin =
+		  jdbcTemplate.query( "select * from adminCredential where adminUserName='" +
+		  credentials.getUserName() + "'and password='" + credentials.getPassword() +
+		 "'", new
+		 BeanPropertyRowMapper<UserCredentialsDTO>(UserCredentialsDTO.class)); if
+		 (!admin.isEmpty()) { viewNameString = "admin-dashboard-page"; } else { throw
+		new InvalidCredentialException("Input Filed are empty"); }
+		 
+		} 
 		  return viewNameString;
 	}
 
