@@ -7,24 +7,22 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.v2stech.fissara.serviceImplement.ServiceImpl;
-
+import com.v2stech.fissara.serviceImplementation.ServiceImpl;
 
 @Controller
 public class HomeController {
 	@Autowired
 	private ServiceImpl service;
-	
+
 	String filePath;
-	
+
 	@GetMapping("/")
-	public ModelAndView displayHomepage(ModelAndView modelAndView) throws ClassNotFoundException, SQLException  {
-		//modelAndView.addObject("regionAreaList", service.getData());
-		//modelAndView.addObject("tenantList", service.getTenanat());
-		service.testingConnection();
-		modelAndView.setViewName("homepage");
+	public ModelAndView displayHomepage(ModelAndView modelAndView) throws ClassNotFoundException, SQLException {
+		modelAndView.setViewName("loginpage");
+	
 		return modelAndView;
 	}
+
 //	@RequestMapping(value = "/uploadYourFile")
 //	public String  uploadChecker(@RequestParam("fileToStore") CommonsMultipartFile cmpFile, Model model)
 //			throws IOException
@@ -55,9 +53,7 @@ public class HomeController {
 //			throw new NullPointerException();
 //
 //		}
-		
-//	}
-	
 
+//	}
 
 }
