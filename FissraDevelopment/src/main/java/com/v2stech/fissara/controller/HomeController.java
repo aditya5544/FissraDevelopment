@@ -1,28 +1,53 @@
 package com.v2stech.fissara.controller;
 
 import java.sql.SQLException;
+import java.util.stream.Collectors;
+
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.v2stech.fissara.serviceImplementation.ServiceImpl;
+import com.v2stech.fissara.exception.InvalidCredentialException;
+import com.v2stech.fissara.exception.InvalidFieldException;
+import com.v2stech.fissara.exception.InvalidPasswordException;
+import com.v2stech.fissara.exception.InvalidUsername;
+import com.v2stech.fissara.model.UserCredentialsDTO;
+import com.v2stech.fissara.service.ServiceImplementation;
 
 @Controller
 public class HomeController {
 	@Autowired
-	private ServiceImpl service;
+	private ServiceImplementation service;
 
 	String filePath;
 
 	@GetMapping("/")
-	public ModelAndView displayHomepage(ModelAndView modelAndView) throws ClassNotFoundException, SQLException {
+	public ModelAndView displayHomepage(ModelAndView modelAndView)  {
 		modelAndView.setViewName("loginpage");
-	
 		return modelAndView;
 	}
-
+	
+	 @RequestMapping(value = "/login-data")
+	 public String addData(@Valid @RequestBody UserCredentialsDTO login, BindingResult result,ModelAndView modelAndView) throws  SQLException, ClassNotFoundException, InvalidFieldException, InvalidCredentialException, InvalidUsername, InvalidPasswordException{
+		 System.out.println("username=" + login.getUsername());
+		 System.out.println("password=" + login.getPassword());
+		 
+			/*
+			 * if(result.hasErrors()) { throw new
+			 * InvalidCredentialException("invalid credentials"); }
+			 */
+		 return service.getUserCredentials(login, result); 
+		 
+	 }
+	 
+	 
 //	@RequestMapping(value = "/uploadYourFile")
 //	public String  uploadChecker(@RequestParam("fileToStore") CommonsMultipartFile cmpFile, Model model)
 //			throws IOException
