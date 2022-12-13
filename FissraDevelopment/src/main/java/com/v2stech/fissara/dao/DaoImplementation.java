@@ -97,5 +97,18 @@ public class DaoImplementation {
 		}
 		return status;
 	}
+	
+	public List<AreaRegionDetails> getRegionArea() throws SQLException, ClassNotFoundException {
+		List<AreaRegionDetails>regionAreaList = new ArrayList<>();
+	     connect=getConnection();
+		preparedStatement = connect.prepareStatement("select *from template_details");
+		resultSet = preparedStatement.executeQuery();
+		while (resultSet.next()) {
+			AreaRegionDetails regionArea = new AreaRegionDetails();
+			regionArea.setDataName(resultSet.getString(resultSet.getMetaData().getColumnName(2)));
+			regionAreaList.add(regionArea);
+		}
+		return regionAreaList;
+	}
 
 }

@@ -30,20 +30,17 @@ public class HomeController {
 
 	@GetMapping("/")
 	public ModelAndView displayHomepage(ModelAndView modelAndView)  {
-		modelAndView.setViewName("loginpage");
+		modelAndView.setViewName("LoginPage");
 		return modelAndView;
 	}
 	
 	 @RequestMapping(value = "/login-data")
-	 public String addData(@Valid @RequestBody UserCredentialsDTO login, BindingResult result,ModelAndView modelAndView) throws  SQLException, ClassNotFoundException, InvalidFieldException, InvalidCredentialException, InvalidUsername, InvalidPasswordException{
+	 public ModelAndView addData(@Valid @RequestBody UserCredentialsDTO login, BindingResult result,ModelAndView modelAndView) throws  SQLException, ClassNotFoundException, InvalidFieldException, InvalidCredentialException, InvalidUsername, InvalidPasswordException{
 		 System.out.println("username=" + login.getUsername());
 		 System.out.println("password=" + login.getPassword());
-		 
-			/*
-			 * if(result.hasErrors()) { throw new
-			 * InvalidCredentialException("invalid credentials"); }
-			 */
-		 return service.getUserCredentials(login, result); 
+		 modelAndView.addObject("dataList", service.getUserCredentials(login, result));
+		 modelAndView.setViewName("HomePage");
+			return modelAndView;
 		 
 	 }
 	 

@@ -40,7 +40,7 @@
 		Download Request For<select class="txtbox col-md-12" name="regionareaname" id="regionorarea">
 				<option selected disabled value="">Select Option</option>
 				<c:forEach items="${dataList}" var="dropdownDetails">
-					<option value="${dropdownDetails.data}">${dropdownDetails.data}</option>
+					<option value="${dropdownDetails.dataName}">${dropdownDetails.dataName}</option>
 				</c:forEach>
 		</div>
 		
