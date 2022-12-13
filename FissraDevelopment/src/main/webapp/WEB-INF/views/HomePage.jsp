@@ -36,27 +36,32 @@
 			<h1 style="text-align: center;">Upload Your File Here</h1>
 		</div>
 		<div class="container region">
-		<div class="mb-3">
-		Download Request For<select class="txtbox col-md-12" name="regionareaname" id="regionorarea">
-				<option selected disabled value="">Select Option</option>
-				<c:forEach items="${dataList}" var="dropdownDetails">
-					<option value="${dropdownDetails.dataName}">${dropdownDetails.dataName}</option>
-				</c:forEach>
-		</div>
-		
 				<div class="mb-3">
-					<span id="error1"></span> Select File<input type="file"
-						id="submitbtn" class="form-control" name="fileToStore"
-						value="File Upload">
+					Download Request For
+					<select class="txtbox col-md-12" name="regionareaname" id="regionorarea">
+						<option selected disabled value="">Select Option</option>
+						<c:forEach items="${dataList}" var="dropdownDetails">
+							<option value="${dropdownDetails.dataName}">${dropdownDetails.dataName}</option>
+						</c:forEach>
+					</select>
+					<span id="dropdownError"></span>
+				</div>
+				
+				<div class="mb-3">
+					 Select File
+							<input type="file" accept=".csv" id="submitbtn" class="form-control" name="fileToStore" value="File Upload">
+							<span id="uploadError"></span>		
 				</div>
 				<div class="mb-3">
-					<!-- <input type="submit" value="upload" class="form-control"
-						id="submitbtn" name="upload"> -->
-						
-						 <button type="button" value="false" id="check" onclick="change()" />Save</button>
+							<!-- <input type="submit" value="upload" class="form-control"
+								id="submitbtn" name="upload"> -->
+								
+					<button type="button" value="false" id="check" onclick="change()">Save</button>
 				</div>
 		</div>
 	</form>
 	<script type="text/javascript" src="<c:url value="/static/js/HomeValidation.js" />"></script>
+
+
 </body>
 </html>
