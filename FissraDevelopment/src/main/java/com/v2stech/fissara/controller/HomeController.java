@@ -18,6 +18,7 @@ import com.v2stech.fissara.exception.InvalidCredentialException;
 import com.v2stech.fissara.exception.InvalidFieldException;
 import com.v2stech.fissara.exception.InvalidPasswordException;
 import com.v2stech.fissara.exception.InvalidUsername;
+import com.v2stech.fissara.model.AreaRegionDetails;
 import com.v2stech.fissara.model.UserCredentialsDTO;
 import com.v2stech.fissara.service.ServiceImplementation;
 
@@ -43,6 +44,22 @@ public class HomeController {
 			return modelAndView;
 		 
 	 }
+	 
+	 @RequestMapping(value = "/drop-data")
+	 public ModelAndView addData( @RequestBody AreaRegionDetails area, ModelAndView model)
+	 {
+		System.out.println(area.getDataName());
+		 
+		 model.setViewName("success");
+			return model;
+		 
+	 }
+	 
+	 
+	
+	 
+	 
+	 
 	 
 	 
 //	@RequestMapping(value = "/uploadYourFile")

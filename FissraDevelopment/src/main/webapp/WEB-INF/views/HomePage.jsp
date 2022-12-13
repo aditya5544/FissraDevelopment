@@ -50,10 +50,13 @@
 						value="File Upload">
 				</div>
 				<div class="mb-3">
-					<input type="submit" value="upload" class="form-control"
-						id="submitbtn" name="upload">
+					<!-- <input type="submit" value="upload" class="form-control"
+						id="submitbtn" name="upload"> -->
+						
+						 <button type="button" value="false" id="check" onclick="change()" />Save</button>
 				</div>
 		</div>
 	</form>
+	<script type="text/javascript" src="<c:url value="/static/js/HomeValidation.js" />"></script>
 </body>
 </html>
