@@ -3,6 +3,7 @@ package com.v2stech.fissara.service;
 
 
 import java.io.BufferedReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -21,16 +22,17 @@ import com.v2stech.fissara.exception.InvalidFieldException;
 import com.v2stech.fissara.exception.InvalidPasswordException;
 import com.v2stech.fissara.exception.InvalidUsername;
 import com.v2stech.fissara.model.AreaRegionDetails;
-import com.v2stech.fissara.model.ErrorDataCollect;
+import com.v2stech.fissara.model.ErrorData;
+
 import com.v2stech.fissara.model.UserCredentialsDTO;
 
 @Service
 public class ServiceImplementation {
 	@Autowired
 	DaoImplementation daoImpl;
-	String[] errorMessage;
+	List<ErrorData> errorDataList=new ArrayList<ErrorData>();
 	List<String> errorList=new ArrayList<>();
-	 
+	String filePathError="/home/v2stech/Documents/Fissara_Development/fissradevelopment/FissraDevelopment/src/main/resources/errorfile.csv";
 
 	public List<AreaRegionDetails> getUserCredentials(UserCredentialsDTO credentials, BindingResult result) throws SQLException, ClassNotFoundException, InvalidFieldException, InvalidCredentialException, InvalidUsername, InvalidPasswordException {
 		boolean value=false;
@@ -78,7 +80,8 @@ public class ServiceImplementation {
 		 }
 }
 	private void datavalidation(String regionName) {
-		if(!regionName.isBlank())
+		System.out.println("region_____name"+regionName);
+		if(!regionName.isEmpty())
 		{
 			if(regionName.getClass().getSimpleName().equals("String"))
 			{
@@ -87,22 +90,58 @@ public class ServiceImplementation {
 			}
 			else
 			{
-				System.out.println("should be in string");
 				errorList.add("should be in string");
+				System.out.println("should be in string");
+				
 			}
 			
 		}
 		else
 		{
+			errorList.add("region name is empty");
 			System.out.println("region name is empty");
-			errorList.add("region name is Empty");
+			
+		}
+		
+		StringBuffer sb = new StringBuffer();
+	      
+	      for (String s : errorList) {
+	         sb.append(s);
+	         sb.append(" ");
+	      }
+	      String str = sb.toString();
+	      System.out.println(str);
+	      errorList.clear();
+		
+		if(!errorList.isEmpty())
+		{
+			ErrorData errorData = new ErrorData(regionName,str);
+			errorDataList.add(errorData);
+			write(errorDataList,regionName,filePathError);
 		}
 		
 		
 	}
 	
+	private void write(List<ErrorData> errorDataList, String regionName, String filePathError2) {
+		boolean status = false;
+		try (FileWriter writer = new FileWriter(filePathError)) {
+			for (ErrorData errorRecord : errorDataList) {
+				writer.append(errorRecord.getName()+ ","  + errorRecord.getMessage() + "\n");
+					status = true;
+			}
+			if (!status) {
+				System.out.println("not successfully created");
+			} else {
+				System.out.println("error file successfully created");
+			}
 
-//	@PostMapping(value="/csv")
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+		}
+		
+	}
+	//	@PostMapping(value="/csv")
 //	public ResponseEntity<Void> processUpload(CommonsMultipartFile cmpFile) {
 //
 //	BufferedReader fileReader = new BufferedReader(new 

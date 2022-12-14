@@ -56,7 +56,7 @@
 							<!-- <input type="submit" value="upload" class="form-control"
 								id="submitbtn" name="upload"> -->
 								
-					<button type="button" value="false" id="check" onclick="change()">Save</button>
+					<input type="submit" value="false" id="check" onclick="change()">Save</button>
 				</div>
 		</div>
 	</form>
