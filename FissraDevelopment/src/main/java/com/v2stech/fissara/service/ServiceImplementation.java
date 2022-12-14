@@ -11,25 +11,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
-import com.opencsv.CSVParser;
 import com.v2stech.fissara.dao.DaoImplementation;
 import com.v2stech.fissara.exception.InvalidCredentialException;
 import com.v2stech.fissara.exception.InvalidFieldException;
 import com.v2stech.fissara.exception.InvalidPasswordException;
 import com.v2stech.fissara.exception.InvalidUsername;
 import com.v2stech.fissara.model.AreaRegionDetails;
+import com.v2stech.fissara.model.ErrorDataCollect;
 import com.v2stech.fissara.model.UserCredentialsDTO;
 
 @Service
 public class ServiceImplementation {
 	@Autowired
 	DaoImplementation daoImpl;
+	String[] errorMessage;
+	List<String> errorList=new ArrayList<>();
+	 
 
 	public List<AreaRegionDetails> getUserCredentials(UserCredentialsDTO credentials, BindingResult result) throws SQLException, ClassNotFoundException, InvalidFieldException, InvalidCredentialException, InvalidUsername, InvalidPasswordException {
 		boolean value=false;
@@ -82,16 +83,19 @@ public class ServiceImplementation {
 			if(regionName.getClass().getSimpleName().equals("String"))
 			{
 				daoImpl.insertInToDatabaseRegion(regionName);
+				
 			}
 			else
 			{
 				System.out.println("should be in string");
+				errorList.add("should be in string");
 			}
 			
 		}
 		else
 		{
 			System.out.println("region name is empty");
+			errorList.add("region name is Empty");
 		}
 		
 		
