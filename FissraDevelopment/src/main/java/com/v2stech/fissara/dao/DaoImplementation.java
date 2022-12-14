@@ -111,4 +111,22 @@ public class DaoImplementation {
 		return regionAreaList1;
 	}
 
+	public void insertInToDatabaseRegion(String regionName) {
+		try {
+			connect = getConnection();
+			String sql = "insert into region(region_name) values(?)";
+			preparedStatement = connect.prepareStatement(sql);
+			preparedStatement.setString(1,regionName);
+			preparedStatement.executeUpdate();
+			System.out.println("my region name"+regionName);
+			System.out.println("data inserted successfully");
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+
+
+
+		}
+		
+	}
+
 }
