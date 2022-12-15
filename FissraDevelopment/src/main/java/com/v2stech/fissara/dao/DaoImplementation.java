@@ -41,8 +41,8 @@ public class DaoImplementation {
 
 	}
 
-	public boolean loginCredentials(UserCredentialsDTO loginCredentials)
-			throws SQLException, ClassNotFoundException, InvalidUsername, InvalidPasswordException, InvalidCredentialException {
+	public boolean loginCredentials(UserCredentialsDTO loginCredentials) throws SQLException, ClassNotFoundException,
+			InvalidUsername, InvalidPasswordException, InvalidCredentialException {
 		PreparedStatement preparedStatement;
 		ResultSet resultSet;
 		String username = null;
@@ -57,50 +57,41 @@ public class DaoImplementation {
 			username = resultSet.getString("username");
 			password = resultSet.getString("password");
 		}
-		if(loginCredentials.getUsername().isEmpty() && loginCredentials.getPassword().isEmpty())
-		{
+		if (loginCredentials.getUsername().isEmpty() && loginCredentials.getPassword().isEmpty()) {
 			throw new InvalidCredentialException("both are empty");
 		}
-		if(loginCredentials.getUsername().isEmpty() ||loginCredentials.getUsername().isBlank()|| loginCredentials.getUsername()==null)
-		{
+		if (loginCredentials.getUsername().isEmpty() || loginCredentials.getUsername().isBlank()
+				|| loginCredentials.getUsername() == null) {
 			throw new InvalidCredentialException("empty username");
 		}
-		if(loginCredentials.getPassword().isEmpty() ||loginCredentials.getPassword().isBlank()|| loginCredentials.getPassword()==null)
-		{
+		if (loginCredentials.getPassword().isEmpty() || loginCredentials.getPassword().isBlank()
+				|| loginCredentials.getPassword() == null) {
 			throw new InvalidCredentialException("empty password");
 		}
-	
-	
-		if(username==null)
-		{
+
+		if (username == null) {
 			throw new InvalidUsername("invalid username");
 		}
-		if(username.equals("null") || !username.equals(loginCredentials.getUsername ()))
-		{
+		if (username.equals("null") || !username.equals(loginCredentials.getUsername())) {
 			throw new InvalidUsername("invalid username");
 		}
-		
-		if(password.equals("null") || loginCredentials.getPassword().isBlank())
-		{
+
+		if (password.equals("null") || loginCredentials.getPassword().isBlank()) {
 			throw new InvalidPasswordException("invalid password");
-		}
-		else if (!password.equals(loginCredentials.getPassword())) {
+		} else if (!password.equals(loginCredentials.getPassword())) {
 			throw new InvalidPasswordException("invalid password");
-		}
-		else if(!username.equals(loginCredentials.getUsername ()) && !password.equals(loginCredentials.getPassword()))
-		{
+		} else if (!username.equals(loginCredentials.getUsername())
+				&& !password.equals(loginCredentials.getPassword())) {
 			throw new InvalidCredentialException("invalid credentials");
-		}
-		else
-		{
-			status=true;
+		} else {
+			status = true;
 		}
 		return status;
 	}
-	
+
 	public List<AreaRegionDetails> getRegionArea() throws SQLException, ClassNotFoundException {
-		List<AreaRegionDetails>regionAreaList1 = new ArrayList<>();
-	     connect=getConnection();
+		List<AreaRegionDetails> regionAreaList1 = new ArrayList<>();
+		connect = getConnection();
 		preparedStatement = connect.prepareStatement("select *from template_details");
 		resultSet = preparedStatement.executeQuery();
 		while (resultSet.next()) {
@@ -116,17 +107,32 @@ public class DaoImplementation {
 			connect = getConnection();
 			String sql = "insert into region(region_name) values(?)";
 			preparedStatement = connect.prepareStatement(sql);
-			preparedStatement.setString(1,regionName);
+			preparedStatement.setString(1, regionName);
 			preparedStatement.executeUpdate();
-			System.out.println("my region name"+regionName);
+			System.out.println("my region name" + regionName);
 			System.out.println("data inserted successfully");
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 
-
-
 		}
-		
+
 	}
+	
+	public boolean checkFromDatabaseRegion(String regionName) throws ClassNotFoundException, SQLException {
+
+		connect = getConnection();
+		 boolean value =true;
+		String sql = "select * from region where region_name=? ";
+		preparedStatement = connect.prepareStatement(sql);
+		preparedStatement.setString(1,regionName);
+		ResultSet resultSet=preparedStatement.executeQuery();
+		if(!resultSet.isBeforeFirst())
+		{
+			value=false;
+		}
+		return value;
+	}
+	
+	
 
 }

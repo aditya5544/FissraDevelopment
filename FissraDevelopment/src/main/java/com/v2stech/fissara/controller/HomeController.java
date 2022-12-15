@@ -2,6 +2,8 @@ package com.v2stech.fissara.controller;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
@@ -26,6 +28,7 @@ import com.v2stech.fissara.exception.InvalidPasswordException;
 import com.v2stech.fissara.exception.InvalidUsername;
 import com.v2stech.fissara.model.AreaRegionDetails;
 import com.v2stech.fissara.model.UserCredentialsDTO;
+import com.v2stech.fissara.model.regionUploadVO;
 import com.v2stech.fissara.service.ServiceImplementation;
 
 @Controller
@@ -58,21 +61,32 @@ public class HomeController {
 //		model.setViewName("success");
 //		return model;
 //		 
-//	 }
 	 
 		@RequestMapping(value = "/uploadYourFile")
 		public String  uploadChecker(@RequestParam("fileToStore") CommonsMultipartFile cmpFile,@RequestParam("regionareaname") String select, Model model)
-		throws IOException, CsvValidationException
+		throws IOException, CsvValidationException, ClassNotFoundException, SQLException
 		{
+			int success;
+			
+			List<String> headerList=new ArrayList();
+			List<regionUploadVO> regionUploadVoList=new ArrayList<regionUploadVO>();
 			System.out.println(cmpFile.getOriginalFilename());
 			System.out.println(select);
-			service.read(cmpFile);
-			return "null";
+			regionUploadVoList=service.read(cmpFile);
+			success = service.validateRegionUploadVoList(regionUploadVoList);
+			if(success==1)
+			{
+				//service.write(null, select, select)
+			}
 			
+			
+			
+			return "null";
 		}
 	 
 	 
 	 
+		
 	 
 //	@RequestMapping(value = "/uploadYourFile")
 //	public String  uploadChecker(@RequestParam("fileToStore") CommonsMultipartFile cmpFile, Model model)
