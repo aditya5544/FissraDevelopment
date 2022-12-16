@@ -67,20 +67,21 @@ public class HomeController {
 		throws IOException, CsvValidationException, ClassNotFoundException, SQLException
 		{
 			int success;
-			
 			List<String> headerList=new ArrayList();
 			List<regionUploadVO> regionUploadVoList=new ArrayList<regionUploadVO>();
 			System.out.println(cmpFile.getOriginalFilename());
 			System.out.println(select);
 			regionUploadVoList=service.read(cmpFile);
-			success = service.validateRegionUploadVoList(regionUploadVoList);
-			if(success==1)
+			System.out.println(regionUploadVoList);
+			for(regionUploadVO region :regionUploadVoList)
 			{
-				//service.write(null, select, select)
+				System.out.println("return list region name="+region.getRegionName());
 			}
-			
-			
-			
+			success = service.validateRegionUploadVoList(regionUploadVoList);
+//			if(success==1)
+//			{
+//				service.write(null, select, select)
+//			}
 			return "null";
 		}
 	 

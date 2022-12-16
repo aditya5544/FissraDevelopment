@@ -4,6 +4,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class regionUploadVO {
+	
+
+	public regionUploadVO(String regionName) {
+		super();
+		this.regionName = regionName;
+	}
+
+	public regionUploadVO(String regionName, String recordUpdateMessage, List<Integer> errorColList) {
+		super();
+		this.regionName = regionName;
+		this.recordUpdateMessage = recordUpdateMessage;
+		this.errorColList = errorColList;
+	}
+
+
 	private String regionName;
 	private String recordUpdateMessage;
 	
@@ -33,11 +48,6 @@ public class regionUploadVO {
 		this.errorColList = errorColList;
 	}
 
-	public regionUploadVO(String regionName) {
-		super();
-		this.regionName = regionName;
-	}
-	
 	
 	
 	

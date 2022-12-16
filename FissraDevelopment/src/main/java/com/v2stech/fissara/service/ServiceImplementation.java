@@ -43,74 +43,70 @@ public class ServiceImplementation {
 		value = daoImpl.loginCredentials(credentials);
 		if (value) {
 			return daoImpl.getRegionArea();
-
-		}
+			}
 		return null;
 
 	}
 
-	public int validateRegionUploadVoList(List<regionUploadVO> regionUploadVoList) throws ClassNotFoundException, SQLException {
-		int failCounter=0;
+	public int validateRegionUploadVoList(List<regionUploadVO> regionUploadVoList)
+			throws ClassNotFoundException, SQLException {
+		int failCounter = 0;
 		boolean check;
-		
+
 		for (regionUploadVO regionUploadVO : regionUploadVoList) {
-			if(!regionUploadVO.getRegionName().isEmpty())
-			{
+			if (!(regionUploadVO.getRegionName().isEmpty())) {
 				String regex = "[0-9]+";
-				if(!regionUploadVO.getRegionName().matches(regex))
-				{
-					check=daoImpl.checkFromDatabaseRegion(regionUploadVO.getRegionName());
-					if(!check)
-					{
+				if (!regionUploadVO.getRegionName().matches(regex)) {
+					check = daoImpl.checkFromDatabaseRegion(regionUploadVO.getRegionName());
+					if (!check) {
 						daoImpl.insertInToDatabaseRegion(regionUploadVO.getRegionName());
-					}
-					else
-					{
+					} else {
+						regionUploadVO
+								.setRecordUpdateMessage(regionUploadVO.getRecordUpdateMessage() + "Duplicate region");
 						System.out.println("Duplicate Region");
 						failCounter++;
 					}
-						
-				}
-				else
-				{
+
+				} else {
+					regionUploadVO.setRecordUpdateMessage(
+							regionUploadVO.getRecordUpdateMessage() + "Region name should not be in number");
 					System.out.println("Region Name should not be in Number");
 					failCounter++;
 				}
-			}
-			else
-			{
+			} else {
+				regionUploadVO.setRecordUpdateMessage(
+						regionUploadVO.getRecordUpdateMessage() + "Region Name is should be empty");
 				System.out.println("Region Name should not be Empty");
 				failCounter++;
 			}
 		}
-		
-		if(failCounter>0)
-		{
+		if (failCounter > 0) {
+			write(regionUploadVoList, filePathError);
 			return 1;
-		}
-		
+			}
+
 		return 0;
-		
-		
-		
+	}
+
+	public void write(List<regionUploadVO> errorDataList, String filePathError) {
+		boolean status = false;
+		try (FileWriter writer = new FileWriter(filePathError)) {
+			for (regionUploadVO errorRecord : errorDataList) {
+				
+				writer.append(errorRecord.getRegionName() + "," + errorRecord.getRecordUpdateMessage()+ "\n");
+				status = true;
+			}
+			if (!status) {
+				System.out.println("not successfully created");
+			} else {
+				System.out.println("error file successfully created");
+			}
+
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+		}
 
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 
 //	public List<regionUploadVO> read(CommonsMultipartFile cmpFile) throws IOException {
 //		// List<Object> csvContent=new ArrayList<Object>();
@@ -164,12 +160,11 @@ public class ServiceImplementation {
 	public List<regionUploadVO> read(CommonsMultipartFile cmpFile) throws IOException {
 		List<String> headerList = new ArrayList();
 		List<regionUploadVO> regionUploadVoList = new ArrayList<>();
-
-		String regionName = null;
+		// String regionName = null;
 		String regionManager;
 		String csvFile = cmpFile.getOriginalFilename();
 		BufferedReader br;
-		List<String> result = new ArrayList<>();
+		// List<String> result = new ArrayList<>();
 		try {
 			// int i=0;
 			String[] data;
@@ -190,16 +185,20 @@ public class ServiceImplementation {
 
 			while ((line = br.readLine()) != null) {
 				// dataList.add(line);
-				regionUploadVO regionUploadObject = new regionUploadVO(regionName);
-				regionUploadVoList.add(regionUploadObject);
+			
+
 				data = line.split(",");
 				System.out.println("Array length" + data.length);
 				for (int i = 0; i < data.length; i++) {
-					regionName = data[0];
-					System.out.print(data[i] + " ");
+				
+					// regionName = data[0];
+					regionUploadVO regionUploadObject = new regionUploadVO(data[0]);
+					regionUploadVoList.add(regionUploadObject);
+					System.out.print("my data=" + data[i] + " ");
 				}
 				System.out.println();
-				result.add(line);
+				//regionUploadVoList.add(regionUploadObject);
+				// result.add(line);
 			}
 
 		} catch (Exception e) {
@@ -249,24 +248,6 @@ public class ServiceImplementation {
 //
 //	}
 
-	public void write(List<ErrorData> errorDataList, String regionName, String filePathError2) {
-		boolean status = false;
-		try (FileWriter writer = new FileWriter(filePathError)) {
-			for (ErrorData errorRecord : errorDataList) {
-				writer.append(errorRecord.getName() + "," + errorRecord.getMessage() + "\n");
-				status = true;
-			}
-			if (!status) {
-				System.out.println("not successfully created");
-			} else {
-				System.out.println("error file successfully created");
-			}
-
-		} catch (IOException e) {
-			System.out.println(e.getMessage());
-		}
-
-	}
 	// @PostMapping(value="/csv")
 //	public ResponseEntity<Void> processUpload(CommonsMultipartFile cmpFile) {
 //
