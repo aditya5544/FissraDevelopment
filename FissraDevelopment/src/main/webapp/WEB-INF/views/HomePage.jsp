@@ -29,8 +29,8 @@
 		integrity="sha384-ODmDIVzN+pFdexxHEHFBQH3/9/vQ9uori45z4JjnFsRydbmQbmL5t1tQ0culUzyK"
 		crossorigin="anonymous"></script>
 
-	<form action="uploadYourFile" method="post"
-		enctype="multipart/form-data">
+	 <!-- <form action="uploadYourFile" method="post"
+		enctype="multipart/form-data"> -->
 
 		<div>
 			<h1 style="text-align: center;">Upload Your File Here</h1>
@@ -56,11 +56,13 @@
 							<!-- <input type="submit" value="upload" class="form-control"
 								id="submitbtn" name="upload"> -->
 								
-					<input type="submit" value="false" id="check" onclick="change()">Save</button>
+					<input type="submit" value="Upload" id="check" >
 				</div>
 		</div>
-	</form>
-	<script type="text/javascript" src="<c:url value="/static/js/HomeValidation.js" />"></script>
+		
+		<h6 style="text-align: center;" id="messageid"></h6>
+	<!-- </form> -->
+	<script type="text/javascript" src="<c:url value="/static/js/homeValidation.js" />"></script>
 
 
 </body>

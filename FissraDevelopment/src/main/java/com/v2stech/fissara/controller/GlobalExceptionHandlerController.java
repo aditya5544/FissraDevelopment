@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.v2stech.fissara.exception.InvalidCredentialException;
 import com.v2stech.fissara.exception.InvalidFieldException;
+import com.v2stech.fissara.exception.InvalidFileException;
 import com.v2stech.fissara.exception.InvalidPasswordException;
 import com.v2stech.fissara.exception.InvalidUsername;
 @RestControllerAdvice
@@ -57,5 +58,8 @@ public class GlobalExceptionHandlerController {
 		});
 		return new ResponseEntity<Map<String, String>>(resp, HttpStatus.BAD_REQUEST);
 	}
-	
+	@ExceptionHandler(InvalidFileException.class)
+	public ResponseEntity<String> getIInvalidFileException(InvalidFileException exception) {
+		return new ResponseEntity<String>(exception.getMessage(),HttpStatus.NOT_FOUND);
+	}
 }

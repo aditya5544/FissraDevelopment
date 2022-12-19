@@ -1,11 +1,11 @@
-matunga,null
-,nullRegion Name is should be empty
-kurla,null
-,nullRegion Name is should be empty
-ghansoli,null
-,nullRegion Name is should be empty
-koparkhairne,null
-,nullRegion Name is should be empty
-879,nullRegion name should not be in number
-,nullRegion Name is should be empty
-pawai,null
+panaji,duplicate region name
+,Region Name should not be Empty
+mumbai,duplicate region name
+,Region Name should not be Empty
+gujrat,duplicate region name
+,Region Name should not be Empty
+1234,Region Name should not be in Number
+,Region Name should not be Empty
+udaipur,duplicate region name
+,Region Name should not be Empty
+uttrakhand,duplicate region name
