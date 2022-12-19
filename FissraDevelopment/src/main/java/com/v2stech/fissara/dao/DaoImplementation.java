@@ -69,16 +69,16 @@ public class DaoImplementation {
 		}
 
 		if (username == null) {
-			throw new InvalidUsername("invalid username");
+			throw new InvalidCredentialException("invalid username");
 		}
 		if (username.equals("null") || !username.equals(loginCredentials.getUsername())) {
-			throw new InvalidUsername("invalid username");
+			throw new InvalidCredentialException("invalid username");
 		}
 
 		if (password.equals("null") || loginCredentials.getPassword().isBlank()) {
-			throw new InvalidPasswordException("invalid password");
+			throw new InvalidCredentialException("invalid password");
 		} else if (!password.equals(loginCredentials.getPassword())) {
-			throw new InvalidPasswordException("invalid password");
+			throw new InvalidCredentialException("invalid password");
 		} else if (!username.equals(loginCredentials.getUsername())
 				&& !password.equals(loginCredentials.getPassword())) {
 			throw new InvalidCredentialException("invalid credentials");
@@ -117,6 +117,7 @@ public class DaoImplementation {
 
 	}
 
+
 	public void findRegion() throws ClassNotFoundException, SQLException {
 		String region_name = null;
 		connect = getConnection();
@@ -140,6 +141,7 @@ public class DaoImplementation {
 			System.out.println(e.getMessage());
 		}
 	}
+
 
 	public boolean checkFromDatabaseRegion(String regionName) throws ClassNotFoundException, SQLException {
 		connect = getConnection();

@@ -8,27 +8,29 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.opencsv.exceptions.CsvValidationException;
 import com.v2stech.fissara.exception.InvalidCredentialException;
 import com.v2stech.fissara.exception.InvalidFieldException;
+import com.v2stech.fissara.exception.InvalidFileException;
 import com.v2stech.fissara.exception.InvalidPasswordException;
 import com.v2stech.fissara.exception.InvalidUsername;
 import com.v2stech.fissara.model.AreaUploadVO;
-import com.v2stech.fissara.model.UserCredentialsDTO;
 import com.v2stech.fissara.model.RegionUploadVO;
+import com.v2stech.fissara.model.UserCredentialsDTO;
 import com.v2stech.fissara.service.ServiceImplementation;
 
-@Controller
+@RestController
 public class HomeController {
 	@Autowired
 	private ServiceImplementation service;
@@ -36,20 +38,22 @@ public class HomeController {
 	String filePath;
 
 	@GetMapping("/")
-	public ModelAndView displayHomepage(ModelAndView modelAndView)  {
+	public ModelAndView displayHomepage(ModelAndView modelAndView) {
 		modelAndView.setViewName("LoginPage");
 		return modelAndView;
 	}
-	
-	 @RequestMapping(value = "/login-data")
-	 public ModelAndView addData(@Valid @RequestBody UserCredentialsDTO login, BindingResult result,ModelAndView modelAndView) throws  SQLException, ClassNotFoundException, InvalidFieldException, InvalidCredentialException, InvalidUsername, InvalidPasswordException{
-		 System.out.println("username=" + login.getUsername());
-		 System.out.println("password=" + login.getPassword());
-		 modelAndView.addObject("dataList", service.getUserCredentials(login, result));
-		 modelAndView.setViewName("HomePage");
-		 return modelAndView;
-	 }
-	 
+
+	@RequestMapping(value = "/login-data")
+	public ModelAndView addData(@Valid @RequestBody UserCredentialsDTO login, BindingResult result,
+			ModelAndView modelAndView) throws SQLException, ClassNotFoundException, InvalidFieldException,
+			InvalidCredentialException, InvalidUsername, InvalidPasswordException {
+		System.out.println("username=" + login.getUsername());
+		System.out.println("password=" + login.getPassword());
+		modelAndView.addObject("dataList", service.getUserCredentials(login, result));
+		modelAndView.setViewName("HomePage");
+		return modelAndView;
+	}
+
 //	 @RequestMapping(value = "/drop-data")
 //	 public ModelAndView addData( @RequestBody AreaRegionDetails area, ModelAndView model)
 //	 {
@@ -57,79 +61,50 @@ public class HomeController {
 //		model.setViewName("success");
 //		return model;
 //		 
-	 
-//		@RequestMapping(value = "/uploadYourFile")
-//		public String  uploadChecker(@RequestParam("fileToStore") CommonsMultipartFile cmpFile,@RequestParam("regionareaname") String select, Model model)
-//		throws IOException, SQLException
-//		{
-//			int success;
-//			List<String> headerList=new ArrayList();
-//			List<RegionUploadVO> regionUploadVoList=new ArrayList<RegionUploadVO>();
-//			List<AreaUploadVO> areaUploadVOList=new ArrayList<AreaUploadVO>();
-//			System.out.println(cmpFile.getOriginalFilename());
-//			System.out.println(select);
-//			regionUploadVoList=service.read(cmpFile);
-//			areaUploadVOList=service.readArea(cmpFile);
-//			System.out.println(regionUploadVoList);
-//			for(RegionUploadVO region :regionUploadVoList)
-//			{
-//				System.out.println("return list region name="+region.getRegionName());
-//			}
-//			//success = service.validateRegionUploadVoList(regionUploadVoList);
-////			if(success==1)
-////			{
-////				service.write(null, select, select)
-////			}
-//			return "null";
-//		}
-//	 
-	 
-		@RequestMapping(value = "/uploadYourFile")
-		public void  uploadAreaChecker(@RequestParam("fileToStore") CommonsMultipartFile cmpFile, Model model)
-		throws IOException, ClassNotFoundException, SQLException
-		{
-			int success;
-			List<String> headerList=new ArrayList();
-			List<AreaUploadVO> areaUploadVOList=new ArrayList<>();
-			System.out.println(cmpFile.getOriginalFilename());
-			areaUploadVOList=service.readArea(cmpFile);
-			service.validateAreaUploadVoList(areaUploadVOList);
-		}
-	 
-	 
-		
-	 
-//	@RequestMapping(value = "/uploadYourFile")
-//	public String  uploadChecker(@RequestParam("fileToStore") CommonsMultipartFile cmpFile, Model model)
-//			throws IOException
-//
+
+
+	
+//	@PostMapping(value = "/form-details")
+//	public String uploadChecker(@RequestParam("fileToStore") CommonsMultipartFile cmpFile,@RequestParam("regionareaname") String select, Model model)
+//	throws IOException, CsvValidationException, ClassNotFoundException, SQLException, InvalidFileException
 //	{
-//		
-//		long size;
-//		if (!cmpFile.isEmpty() && cmpFile.getSize() != 0) {
-//			byte[] data = cmpFile.getBytes();
-//			filePath = File.separator + "home" + File.separator + "v2stech" + File.separator + "Downloads"
-//					+ File.separator + "FindLatLong"  + File.separator + "src"
-//					+ File.separator + "main" + File.separator + "webapp" + File.separator + "static" + File.separator
-//					+ "uploads" + File.separator + cmpFile.getOriginalFilename();
-//			FileOutputStream fos = new FileOutputStream(filePath);
-//			fos.write(data);
-//			fos.close();
-//			model.addAttribute("fileName", cmpFile.getOriginalFilename());
-//			model.addAttribute("fileSize", cmpFile.getSize());
-//			size = cmpFile.getSize();
-//			if (size > 4242880) {
-//				throw new MaxUploadSizeExceededException(size);
-//			}
-//			model.addAttribute("status", "File Added Successully");
-//			service.insertInDatabase(cmpFile,filePath);
-//			return "homepage";
-//		
-//		} else {
-//			throw new NullPointerException();
-//
+//		System.out.println(cmpFile.getOriginalFilename());
+//		System.out.println("selected value"+select);
+//		String filePathError = "/home/v2stech/Documents/Fissara_Development/fissradevelopment/FissraDevelopment/src/main/resources/errorfile.csv";	
+//		Object success;
+//		List<String> headerList=new ArrayList();
+//		List<RegionUploadVO> regionUploadVoList=new ArrayList<RegionUploadVO>();
+//		System.out.println(cmpFile.getOriginalFilename());
+//		System.out.println(select);
+//		service.validateFile(cmpFile);
+//		regionUploadVoList=service.read(cmpFile);
+//		System.out.println("list="+regionUploadVoList);
+//		for(RegionUploadVO region :regionUploadVoList)
+//		{
+//			System.out.println("return list region name="+region.getRegionName());
 //		}
-//
-//}
+//		success = service.validateRegionUploadVoList(regionUploadVoList);
+//		if(success.equals(regionUploadVoList))
+//		{
+//			service.write(regionUploadVoList, filePathError);
+//			System.out.println("write successfully");
+//			return "Error in file";
+//			}
+//		
+//		return "File Successfully Uploaded";
+//	}
+
+	
+
+	@RequestMapping(value = "/form-details")
+	public void uploadAreaChecker(@RequestParam("fileToStore") CommonsMultipartFile cmpFile, Model model)
+			throws IOException, ClassNotFoundException, SQLException {
+		List<String> headerList = new ArrayList();
+		List<AreaUploadVO> areaUploadVOList = new ArrayList<>();
+		System.out.println(cmpFile.getOriginalFilename());
+		areaUploadVOList = service.readArea(cmpFile);
+		service.validateAreaUploadVoList(areaUploadVOList);
+
+	}
 
 }

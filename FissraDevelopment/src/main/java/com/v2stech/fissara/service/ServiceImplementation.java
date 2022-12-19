@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
@@ -15,6 +16,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import com.v2stech.fissara.dao.DaoImplementation;
 import com.v2stech.fissara.exception.InvalidCredentialException;
 import com.v2stech.fissara.exception.InvalidFieldException;
+import com.v2stech.fissara.exception.InvalidFileException;
 import com.v2stech.fissara.exception.InvalidPasswordException;
 import com.v2stech.fissara.exception.InvalidUsername;
 import com.v2stech.fissara.model.AreaRegionDetails;
@@ -43,7 +45,22 @@ public class ServiceImplementation {
 		return null;
 	}
 
-	public int validateRegionUploadVoList(List<RegionUploadVO> regionUploadVoList)
+	public void validateFile(CommonsMultipartFile cmpFile) throws InvalidFileException {
+		String extension = FilenameUtils.getExtension(cmpFile.getOriginalFilename());
+		if(!extension.equals("csv"))
+		{
+			throw new InvalidFileException("file extension should be csv");
+		}
+		if(cmpFile==null)
+		{
+			throw new InvalidFileException("file is null");
+		}
+		
+		
+		
+	}
+ 
+	public Object validateRegionUploadVoList(List<RegionUploadVO> regionUploadVoList)
 			throws ClassNotFoundException, SQLException {
 		int failCounter = 0;
 		boolean check;
@@ -55,22 +72,46 @@ public class ServiceImplementation {
 					if (!check) {
 						daoImpl.insertInToDatabaseRegion(regionUploadVO.getRegionName());
 					} else {
+						if(regionUploadVO.getRecordUpdateMessage()==null)
+						{
+							regionUploadVO.setRecordUpdateMessage("duplicate region name");
+							failCounter++;
+						}
+						else
+						{
 						regionUploadVO
 								.setRecordUpdateMessage(regionUploadVO.getRecordUpdateMessage() + "Duplicate region");
 						System.out.println("Duplicate Region");
 						failCounter++;
+						}
 					}
 				} else {
+					if(regionUploadVO.getRecordUpdateMessage()==null)
+					{
+						regionUploadVO.setRecordUpdateMessage("Region Name should not be in Number");
+						failCounter++;
+					}
+					else
+					{
 					regionUploadVO.setRecordUpdateMessage(
 							regionUploadVO.getRecordUpdateMessage() + "Region name should not be in number");
 					System.out.println("Region Name should not be in Number");
 					failCounter++;
+					}
 				}
 			} else {
+				if(regionUploadVO.getRecordUpdateMessage()==null)
+				{
+					regionUploadVO.setRecordUpdateMessage("Region Name should not be Empty");
+					failCounter++;
+				}
+				else
+				{
 				regionUploadVO.setRecordUpdateMessage(
 						regionUploadVO.getRecordUpdateMessage() + "Region Name is should be empty");
 				System.out.println("Region Name should not be Empty");
 				failCounter++;
+				}
 			}
 		}
 		if (failCounter > 0) {
@@ -80,7 +121,7 @@ public class ServiceImplementation {
 		return 0;
 	}
 	
-	public int validateAreaUploadVoList(List<AreaUploadVO> areaUploadVOList)
+	public void validateAreaUploadVoList(List<AreaUploadVO> areaUploadVOList)
 			 {
 		int failCounter = 0;
 		boolean check;
@@ -95,7 +136,7 @@ public class ServiceImplementation {
 			}
 			
 		}
-		return 0;
+		
 	}
 	
 	
@@ -126,6 +167,7 @@ public class ServiceImplementation {
 		List<String> headerList = new ArrayList<String>();
 		List<RegionUploadVO> regionUploadVoList = new ArrayList<>();
 		String regionName;
+	
 		String regionManager;
 		String csvFile = cmpFile.getOriginalFilename();
 		BufferedReader br;
@@ -164,6 +206,7 @@ public class ServiceImplementation {
 		}
 		return regionUploadVoList;
 	}
+
 
 	public List<AreaUploadVO>  readArea(CommonsMultipartFile cmpFile) throws IOException {
 		List<String> headerList = new ArrayList<>();
@@ -257,5 +300,6 @@ public class ServiceImplementation {
 //	    System.out.println(csvRecord);
 //	}
 //
+
 
 }
