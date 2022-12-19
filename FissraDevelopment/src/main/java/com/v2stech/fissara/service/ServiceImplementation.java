@@ -7,24 +7,21 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
-
 import com.v2stech.fissara.dao.DaoImplementation;
 import com.v2stech.fissara.exception.InvalidCredentialException;
 import com.v2stech.fissara.exception.InvalidFieldException;
 import com.v2stech.fissara.exception.InvalidPasswordException;
 import com.v2stech.fissara.exception.InvalidUsername;
 import com.v2stech.fissara.model.AreaRegionDetails;
+import com.v2stech.fissara.model.AreaUploadVO;
 import com.v2stech.fissara.model.ErrorData;
+import com.v2stech.fissara.model.RegionUploadVO;
 import com.v2stech.fissara.model.UserCredentialsDTO;
-import com.v2stech.fissara.model.regionUploadVO;
 
 @Service
 public class ServiceImplementation {
@@ -33,7 +30,6 @@ public class ServiceImplementation {
 	List<ErrorData> errorDataList = new ArrayList<ErrorData>();
 	List<String> errorList = new ArrayList<>();
 	String filePathError = "/home/v2stech/Documents/Fissara_Development/fissradevelopment/FissraDevelopment/src/main/resources/errorfile.csv";
-
 	List<String> dataList = new ArrayList<>();
 
 	public List<AreaRegionDetails> getUserCredentials(UserCredentialsDTO credentials, BindingResult result)
@@ -43,17 +39,15 @@ public class ServiceImplementation {
 		value = daoImpl.loginCredentials(credentials);
 		if (value) {
 			return daoImpl.getRegionArea();
-			}
+		}
 		return null;
-
 	}
 
-	public int validateRegionUploadVoList(List<regionUploadVO> regionUploadVoList)
+	public int validateRegionUploadVoList(List<RegionUploadVO> regionUploadVoList)
 			throws ClassNotFoundException, SQLException {
 		int failCounter = 0;
 		boolean check;
-
-		for (regionUploadVO regionUploadVO : regionUploadVoList) {
+		for (RegionUploadVO regionUploadVO : regionUploadVoList) {
 			if (!(regionUploadVO.getRegionName().isEmpty())) {
 				String regex = "[0-9]+";
 				if (!regionUploadVO.getRegionName().matches(regex)) {
@@ -66,7 +60,6 @@ public class ServiceImplementation {
 						System.out.println("Duplicate Region");
 						failCounter++;
 					}
-
 				} else {
 					regionUploadVO.setRecordUpdateMessage(
 							regionUploadVO.getRecordUpdateMessage() + "Region name should not be in number");
@@ -83,23 +76,43 @@ public class ServiceImplementation {
 		if (failCounter > 0) {
 			write(regionUploadVoList, filePathError);
 			return 1;
-			}
-
+		}
 		return 0;
 	}
+	
+	public int validateAreaUploadVoList(List<AreaUploadVO> areaUploadVOList)
+			 {
+		int failCounter = 0;
+		boolean check;
+		for (AreaUploadVO areaUplioadVO : areaUploadVOList) {
+			if(!areaUplioadVO.getAreaName().isEmpty())
+			{
+				daoImpl.insertInToArea(areaUplioadVO.getAreaName() ,areaUplioadVO.getRegionName());
+			}
+			else
+			{
+				System.out.println("Area Name Should Not be Empty");
+			}
+			
+		}
+		return 0;
+	}
+	
+	
+	
 
-	public void write(List<regionUploadVO> errorDataList, String filePathError) {
+	public void write(List<RegionUploadVO> errorDataList, String filePathError) {
 		boolean status = false;
 		try (FileWriter writer = new FileWriter(filePathError)) {
-			for (regionUploadVO errorRecord : errorDataList) {
-				
-				writer.append(errorRecord.getRegionName() + "," + errorRecord.getRecordUpdateMessage()+ "\n");
+			for (RegionUploadVO errorRecord : errorDataList) {
+
+				writer.append(errorRecord.getRegionName() + "," + errorRecord.getRecordUpdateMessage() + "\n");
 				status = true;
 			}
 			if (!status) {
-				System.out.println("not successfully created");
+				System.out.println("Not successfully created");
 			} else {
-				System.out.println("error file successfully created");
+				System.out.println("Error file successfully created");
 			}
 
 		} catch (IOException e) {
@@ -108,63 +121,14 @@ public class ServiceImplementation {
 
 	}
 
-//	public List<regionUploadVO> read(CommonsMultipartFile cmpFile) throws IOException {
-//		// List<Object> csvContent=new ArrayList<Object>();
-//		List<String> headerList = new ArrayList();
-//		List<regionUploadVO> regionUploadVoList = new ArrayList<>();
-//
-//		String regionName = null;
-//		String regionManager;
-//		String csvFile = cmpFile.getOriginalFilename();
-//		BufferedReader br;
-//		List<String> result = new ArrayList<>();
-//		try {
-//			// int i=0;
-//			String[] data;
-//			String line = "";
-//			InputStream is = cmpFile.getInputStream();
-//			System.out.println(is);
-//			br = new BufferedReader(new InputStreamReader(is));
-//			String header = br.readLine();
-//			System.out.println("Header " + header);
-//			if (header != null) {
-//				headerList.add(header);
-//			}
-//
-//			// Print Header List
-//			for (String a : headerList) {
-//				System.out.println("hh " + a);
-//			}
-//
-//			while ((line = br.readLine()) != null) {
-//				// dataList.add(line);
-//				regionUploadVO regionUploadObject = new regionUploadVO(regionName);
-//				regionUploadVoList.add(regionUploadObject);
-//				data = line.split(",");
-//				System.out.println("Array length" + data.length);
-//				for (int i = 0; i < data.length; i++) {
-//					regionName = data[0];
-//					System.out.print(data[i] + " ");
-//				}
-//				datavalidation(regionName, dataList);
-//				System.out.println();
-//				result.add(line);
-//			}
-//
-//		} catch (Exception e) {
-//			System.out.println(e.getMessage());
-//		}
-//		return regionUploadVoList;
-//	}
 
-	public List<regionUploadVO> read(CommonsMultipartFile cmpFile) throws IOException {
-		List<String> headerList = new ArrayList();
-		List<regionUploadVO> regionUploadVoList = new ArrayList<>();
-		// String regionName = null;
+	public List<RegionUploadVO> read(CommonsMultipartFile cmpFile) throws IOException {
+		List<String> headerList = new ArrayList<String>();
+		List<RegionUploadVO> regionUploadVoList = new ArrayList<>();
+		String regionName;
 		String regionManager;
 		String csvFile = cmpFile.getOriginalFilename();
 		BufferedReader br;
-		// List<String> result = new ArrayList<>();
 		try {
 			// int i=0;
 			String[] data;
@@ -177,27 +141,21 @@ public class ServiceImplementation {
 			if (header != null) {
 				headerList.add(header);
 			}
-
 			// Print Header List
 			for (String a : headerList) {
 				System.out.println("hh " + a);
 			}
-
 			while ((line = br.readLine()) != null) {
-				// dataList.add(line);
-			
-
 				data = line.split(",");
 				System.out.println("Array length" + data.length);
 				for (int i = 0; i < data.length; i++) {
-				
-					// regionName = data[0];
-					regionUploadVO regionUploadObject = new regionUploadVO(data[0]);
+					regionName = data[0];
+					RegionUploadVO regionUploadObject = new RegionUploadVO(data[0]);
 					regionUploadVoList.add(regionUploadObject);
 					System.out.print("my data=" + data[i] + " ");
 				}
 				System.out.println();
-				//regionUploadVoList.add(regionUploadObject);
+				// regionUploadVoList.add(regionUploadObject);
 				// result.add(line);
 			}
 
@@ -205,6 +163,44 @@ public class ServiceImplementation {
 			System.out.println(e.getMessage());
 		}
 		return regionUploadVoList;
+	}
+
+	public List<AreaUploadVO>  readArea(CommonsMultipartFile cmpFile) throws IOException {
+		List<String> headerList = new ArrayList<>();
+		List<AreaUploadVO> areaUploadVOList = new ArrayList<>();
+		String areaName;
+		String regionName;
+		String areaManager;
+		BufferedReader br;
+		try {
+			// int i=0;
+			String[] data;
+			String line = "";
+			InputStream is = cmpFile.getInputStream();
+			br = new BufferedReader(new InputStreamReader(is));
+			String header = br.readLine();
+			if (header != null) {
+				headerList.add(header);
+			}
+			while ((line = br.readLine()) != null) {
+				data=line.split(",");
+				for (int i = 0; i < data.length; i++){
+					areaName=data[0];
+					regionName=data[1];
+					AreaUploadVO areaUploadVO = new AreaUploadVO(data[0],data[1]);
+					areaUploadVOList.add(areaUploadVO);
+					System.out.print("my data=" + data[i] + " ");
+				}
+				System.out.println();
+			}
+			//Check areaList
+			for ( AreaUploadVO areauploadVO: areaUploadVOList) {
+				System.out.println("obj "+areauploadVO.getAreaName()+ areauploadVO.getRegionName());
+			}
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return areaUploadVOList;
 	}
 
 //	private void datavalidation(String regionName, List<String> dataList) {

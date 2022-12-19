@@ -1,13 +1,35 @@
 -- Create Database
 CREATE SCHEMA `template_data` ;
+
+-- Use Database
 use  template_data;
 
--- Create Tables
+
+-- Do not check forgion key constrain
+SET FOREIGN_KEY_CHECKS = 0;
+
+drop table area;
 -- Create Area table
-create table area(area_id int primary key auto_increment ,area_name varchar(20),region_id int,area_manager_id int,status varchar(20));
+CREATE TABLE `template_data`.`area` (
+  `area_id` INT NOT NULL primary key auto_increment,
+  `area_name` VARCHAR(45) NOT NULL,
+  `region_name` varchar(45) NOT NULL,
+  `area_manager` VARCHAR(45) );
+
+-- Insert into Area Table
+insert into area (area_name,region_name,area_manager) values("Mumbai","Pune","Ankit  Madhvi");
+-- select area_id,area_name,region_name,area_manager from area inner join region where region_id=regionid;
+-- select * from area;
+-- insert into payslip(employee_sr,total_salary,pay_slip_month,pay_slip_year)values((select employee_sr from employee where employee_id=?),?,?,?)");
+
+
+select area_name from area inner join region where region_id =  regionid;
+
 
 -- Create Region Table
 create table region(region_id int primary key auto_increment,region_name varchar(20),region_manager varchar(20));
+
+
 
  -- Create  Template Detailes Table for Database Name
 create table template_details(details_id int auto_increment primary key,details varchar(20));
@@ -41,7 +63,7 @@ CREATE TABLE `users` (
   INSERT INTO `template_data`.`users` (`user_id`, `first_name`, `last_name`, `username`, `password`) VALUES ('102', 'Pooja', 'Singh', 'pooja', 'pooja123');
 
 
-  
+  select region_name from region where region_id=3;
   
   
  --  select * from databasDetails;

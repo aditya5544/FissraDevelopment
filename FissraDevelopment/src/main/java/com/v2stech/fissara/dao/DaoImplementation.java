@@ -15,7 +15,6 @@ import com.v2stech.fissara.exception.InvalidCredentialException;
 import com.v2stech.fissara.exception.InvalidPasswordException;
 import com.v2stech.fissara.exception.InvalidUsername;
 import com.v2stech.fissara.model.AreaRegionDetails;
-import com.v2stech.fissara.model.TenantPojo;
 import com.v2stech.fissara.model.UserCredentialsDTO;
 
 @Repository
@@ -117,22 +116,42 @@ public class DaoImplementation {
 		}
 
 	}
-	
-	public boolean checkFromDatabaseRegion(String regionName) throws ClassNotFoundException, SQLException {
 
+	public void findRegion() throws ClassNotFoundException, SQLException {
+		String region_name = null;
 		connect = getConnection();
-		 boolean value =true;
+		String sql = "select region_name from region where region_id=?";
+		preparedStatement = connect.prepareStatement(sql);
+		preparedStatement.setString(1, region_name);
+		
+
+	}
+
+	public void insertInToArea(String areaName, String regionName) {
+		try {
+			connect = getConnection();
+			String sql = "insert into area(area_name,region_name) values(?,?)";
+			preparedStatement = connect.prepareStatement(sql);
+			preparedStatement.setString(1, areaName);
+			preparedStatement.setString(2, regionName);
+			preparedStatement.executeUpdate();
+			System.out.println("Area Data inserted successfully");
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+	}
+
+	public boolean checkFromDatabaseRegion(String regionName) throws ClassNotFoundException, SQLException {
+		connect = getConnection();
+		boolean value = true;
 		String sql = "select * from region where region_name=? ";
 		preparedStatement = connect.prepareStatement(sql);
-		preparedStatement.setString(1,regionName);
-		ResultSet resultSet=preparedStatement.executeQuery();
-		if(!resultSet.isBeforeFirst())
-		{
-			value=false;
+		preparedStatement.setString(1, regionName);
+		ResultSet resultSet = preparedStatement.executeQuery();
+		if (!resultSet.isBeforeFirst()) {
+			value = false;
 		}
 		return value;
 	}
-	
-	
 
 }

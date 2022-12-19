@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -12,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,14 +19,13 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.opencsv.exceptions.CsvValidationException;
-import com.v2stech.fissara.dao.DaoImplementation;
 import com.v2stech.fissara.exception.InvalidCredentialException;
 import com.v2stech.fissara.exception.InvalidFieldException;
 import com.v2stech.fissara.exception.InvalidPasswordException;
 import com.v2stech.fissara.exception.InvalidUsername;
-import com.v2stech.fissara.model.AreaRegionDetails;
+import com.v2stech.fissara.model.AreaUploadVO;
 import com.v2stech.fissara.model.UserCredentialsDTO;
-import com.v2stech.fissara.model.regionUploadVO;
+import com.v2stech.fissara.model.RegionUploadVO;
 import com.v2stech.fissara.service.ServiceImplementation;
 
 @Controller
@@ -50,8 +47,7 @@ public class HomeController {
 		 System.out.println("password=" + login.getPassword());
 		 modelAndView.addObject("dataList", service.getUserCredentials(login, result));
 		 modelAndView.setViewName("HomePage");
-			return modelAndView;
-		 
+		 return modelAndView;
 	 }
 	 
 //	 @RequestMapping(value = "/drop-data")
@@ -62,29 +58,43 @@ public class HomeController {
 //		return model;
 //		 
 	 
+//		@RequestMapping(value = "/uploadYourFile")
+//		public String  uploadChecker(@RequestParam("fileToStore") CommonsMultipartFile cmpFile,@RequestParam("regionareaname") String select, Model model)
+//		throws IOException, SQLException
+//		{
+//			int success;
+//			List<String> headerList=new ArrayList();
+//			List<RegionUploadVO> regionUploadVoList=new ArrayList<RegionUploadVO>();
+//			List<AreaUploadVO> areaUploadVOList=new ArrayList<AreaUploadVO>();
+//			System.out.println(cmpFile.getOriginalFilename());
+//			System.out.println(select);
+//			regionUploadVoList=service.read(cmpFile);
+//			areaUploadVOList=service.readArea(cmpFile);
+//			System.out.println(regionUploadVoList);
+//			for(RegionUploadVO region :regionUploadVoList)
+//			{
+//				System.out.println("return list region name="+region.getRegionName());
+//			}
+//			//success = service.validateRegionUploadVoList(regionUploadVoList);
+////			if(success==1)
+////			{
+////				service.write(null, select, select)
+////			}
+//			return "null";
+//		}
+//	 
+	 
 		@RequestMapping(value = "/uploadYourFile")
-		public String  uploadChecker(@RequestParam("fileToStore") CommonsMultipartFile cmpFile,@RequestParam("regionareaname") String select, Model model)
-		throws IOException, CsvValidationException, ClassNotFoundException, SQLException
+		public void  uploadAreaChecker(@RequestParam("fileToStore") CommonsMultipartFile cmpFile, Model model)
+		throws IOException, ClassNotFoundException, SQLException
 		{
 			int success;
 			List<String> headerList=new ArrayList();
-			List<regionUploadVO> regionUploadVoList=new ArrayList<regionUploadVO>();
+			List<AreaUploadVO> areaUploadVOList=new ArrayList<>();
 			System.out.println(cmpFile.getOriginalFilename());
-			System.out.println(select);
-			regionUploadVoList=service.read(cmpFile);
-			System.out.println(regionUploadVoList);
-			for(regionUploadVO region :regionUploadVoList)
-			{
-				System.out.println("return list region name="+region.getRegionName());
-			}
-			success = service.validateRegionUploadVoList(regionUploadVoList);
-//			if(success==1)
-//			{
-//				service.write(null, select, select)
-//			}
-			return "null";
+			areaUploadVOList=service.readArea(cmpFile);
+			service.validateAreaUploadVoList(areaUploadVOList);
 		}
-	 
 	 
 	 
 		
