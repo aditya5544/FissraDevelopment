@@ -43,16 +43,21 @@ function check(field, message) {
 		  enctype: 'multipart/form-data',
 		  url: url,
 		success: function(response) {
+		$(messageid).html("");
 		 var html = "";
 		html += "<h6> "+ response + "</h6>";
          $(messageid).append(html); 
 		},
  	error: function(response) {
- 	$('#uploadError').html(response.responseText)
-				$('#uploadError').show();
- 	 var html = "";
+ 	 	$(messageid).html("");
+ 	 	 var html = "";
 		html += "<h6> "+ response + "</h6>";
          $(messageid).append(html); 
+ 	
+ 	$('#uploadError').html(response.responseText)
+ 	$(messageid).html("");
+				$('#uploadError').show();
+		
  	
 	}
 	});
