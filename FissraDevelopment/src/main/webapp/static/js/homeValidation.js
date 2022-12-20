@@ -47,7 +47,8 @@ function check(field, message) {
 		 var html = "";
 		html += "<h6> "+ response + "</h6>";
          $(messageid).append(html); 
-		},
+         $('#submitbtn').val("");
+         		},
  	error: function(response) {
  	 	$(messageid).html("");
  	 	 var html = "";
@@ -57,6 +58,8 @@ function check(field, message) {
  	$('#uploadError').html(response.responseText)
  	$(messageid).html("");
 				$('#uploadError').show();
+			  $('#submitbtn').val("");
+			
 		
  	
 	}
