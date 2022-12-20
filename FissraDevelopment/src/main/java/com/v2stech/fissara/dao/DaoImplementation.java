@@ -11,11 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.Statement;
-import com.v2stech.fissara.exception.InvalidCredentialException;
-import com.v2stech.fissara.exception.InvalidPasswordException;
-import com.v2stech.fissara.exception.InvalidUsername;
 import com.v2stech.fissara.model.AreaRegionDetails;
-import com.v2stech.fissara.model.TenantPojo;
 import com.v2stech.fissara.model.UserCredentialsDTO;
 
 @Repository
@@ -41,53 +37,31 @@ public class DaoImplementation {
 
 	}
 
-	public boolean loginCredentials(UserCredentialsDTO loginCredentials) throws SQLException, ClassNotFoundException,
-			InvalidUsername, InvalidPasswordException, InvalidCredentialException {
-		PreparedStatement preparedStatement;
-		ResultSet resultSet;
-		String username = null;
-		String password = null;
-		boolean status = false;
-		connect = getConnection();
-		preparedStatement = connect.prepareStatement("select * from users where username=? or password=?;");
-		preparedStatement.setString(1, loginCredentials.getUsername());
-		preparedStatement.setString(2, loginCredentials.getPassword());
-		resultSet = preparedStatement.executeQuery();
-		while (resultSet.next()) {
-			username = resultSet.getString("username");
-			password = resultSet.getString("password");
-		}
-		if (loginCredentials.getUsername().isEmpty() && loginCredentials.getPassword().isEmpty()) {
-			throw new InvalidCredentialException("both are empty");
-		}
-		if (loginCredentials.getUsername().isEmpty() || loginCredentials.getUsername().isBlank()
-				|| loginCredentials.getUsername() == null) {
-			throw new InvalidCredentialException("empty username");
-		}
-		if (loginCredentials.getPassword().isEmpty() || loginCredentials.getPassword().isBlank()
-				|| loginCredentials.getPassword() == null) {
-			throw new InvalidCredentialException("empty password");
-		}
+//	public List<UserCredentialsDTO> loginCredentials(UserCredentialsDTO loginCredentials) throws SQLException, ClassNotFoundException, InvalidCredentialException {
+//		PreparedStatement preparedStatement;
+//		ResultSet resultSet;
+//		String username = null;
+//		String password = null;
+//		boolean status = false;
+//		connect = getConnection();
+//		preparedStatement = connect.prepareStatement("select * from users where username=? or password=?;");
+//		preparedStatement.setString(1, loginCredentials.getUsername());
+//		preparedStatement.setString(2, loginCredentials.getPassword());
+//		resultSet = preparedStatement.executeQuery();
+//		while (resultSet.next()) {
+//		UserCredentialsDTO loginCredentials1=new UserCredentialsDTO();
+//			username = resultSet.getString("username");
+//			loginCredentials1.setUsername(username);
+//			password = resultSet.getString("password");
+//			loginCredentials1.setPassword(password);
+//			
+//		}
+		
+		//status = validateLoginCredentials(loginCredentials, username, password, status);
+//		return status;
+//	}
 
-		if (username == null) {
-			throw new InvalidCredentialException("invalid username");
-		}
-		if (username.equals("null") || !username.equals(loginCredentials.getUsername())) {
-			throw new InvalidCredentialException("invalid username");
-		}
-
-		if (password.equals("null") || loginCredentials.getPassword().isBlank()) {
-			throw new InvalidCredentialException("invalid password");
-		} else if (!password.equals(loginCredentials.getPassword())) {
-			throw new InvalidCredentialException("invalid password");
-		} else if (!username.equals(loginCredentials.getUsername())
-				&& !password.equals(loginCredentials.getPassword())) {
-			throw new InvalidCredentialException("invalid credentials");
-		} else {
-			status = true;
-		}
-		return status;
-	}
+	
 
 	public List<AreaRegionDetails> getRegionArea() throws SQLException, ClassNotFoundException {
 		List<AreaRegionDetails> regionAreaList1 = new ArrayList<>();
@@ -118,6 +92,33 @@ public class DaoImplementation {
 
 	}
 
+
+	public void findRegion() throws ClassNotFoundException, SQLException {
+		String region_name = null;
+		connect = getConnection();
+		String sql = "select region_name from region where region_id=?";
+		preparedStatement = connect.prepareStatement(sql);
+		preparedStatement.setString(1, region_name);
+		
+
+	}
+
+	public void insertInToArea(String areaName, String regionName,String id) {
+		try {
+			connect = getConnection();
+			String sql = "insert into area(area_name,region_name,region_id) values(?,?)";
+			preparedStatement = connect.prepareStatement(sql);
+			preparedStatement.setString(1, areaName);
+			preparedStatement.setString(2, regionName);
+			preparedStatement.setInt(3, Integer.parseInt(id));
+			preparedStatement.executeUpdate();
+			System.out.println("Area Data inserted successfully");
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+	}
+
+
 	public boolean checkFromDatabaseRegion(String regionName) throws ClassNotFoundException, SQLException {
 		connect = getConnection();
 		boolean value = true;
@@ -129,6 +130,44 @@ public class DaoImplementation {
 			value = false;
 		}
 		return value;
+	}
+
+	public String checkFromDatabaseRegionForId(String regionName) throws ClassNotFoundException, SQLException {
+		connect = getConnection();
+		String id = null;
+		boolean value = true;
+		String sql = "select  region_id from region where region_name=? ";
+		preparedStatement.setString(1, regionName);
+		resultSet = preparedStatement.executeQuery();
+		while (resultSet.next()) {
+			id = resultSet.getString("region_id");
+		}
+		return id;
+		
+	}
+
+	public List<UserCredentialsDTO> loginCredentials(List<UserCredentialsDTO> loginCredentialsList, UserCredentialsDTO loginCredentials) throws ClassNotFoundException, SQLException {
+		PreparedStatement preparedStatement;
+		ResultSet resultSet;
+		String username = null;
+		String password = null;
+		boolean status = false;
+		connect = getConnection();
+		preparedStatement = connect.prepareStatement("select * from users where username=? or password=?;");
+		preparedStatement.setString(1, loginCredentials.getUsername());
+		preparedStatement.setString(2, loginCredentials.getPassword());
+		resultSet = preparedStatement.executeQuery();
+		while (resultSet.next()) {
+		UserCredentialsDTO loginCredentials1=new UserCredentialsDTO();
+			username = resultSet.getString("username");
+			loginCredentials1.setUsername(username);
+			password = resultSet.getString("password");
+			loginCredentials1.setPassword(password);
+			loginCredentialsList.add(loginCredentials1);
+			
+		}
+		
+		return loginCredentialsList;
 	}
 
 }

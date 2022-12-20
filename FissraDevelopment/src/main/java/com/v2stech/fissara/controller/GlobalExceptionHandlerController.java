@@ -14,10 +14,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.v2stech.fissara.exception.InvalidCredentialException;
-import com.v2stech.fissara.exception.InvalidFieldException;
 import com.v2stech.fissara.exception.InvalidFileException;
-import com.v2stech.fissara.exception.InvalidPasswordException;
-import com.v2stech.fissara.exception.InvalidUsername;
+
 @RestControllerAdvice
 @ControllerAdvice
 public class GlobalExceptionHandlerController {
@@ -26,38 +24,31 @@ public class GlobalExceptionHandlerController {
 		return new ResponseEntity<String>(exception.getMessage(),HttpStatus.NOT_FOUND);
 	}
 	
-	@ExceptionHandler(InvalidFieldException.class)
-	public ResponseEntity<Map<String, String>> getInvalidFieldException(InvalidFieldException ex) {
-		Map<String, String> errorMessage = new HashMap<>();
-		for (ObjectError error : ex.getBindingResult().getAllErrors()) {
-			String filedName = ((FieldError) error).getField();
-			String message = error.getDefaultMessage();
-			errorMessage.put(filedName, message);
-		}
-		return new ResponseEntity<Map<String, String>>(errorMessage, HttpStatus.NOT_FOUND);
-	}
+//	@ExceptionHandler(InvalidFieldException.class)
+//	public ResponseEntity<Map<String, String>> getInvalidFieldException(InvalidFieldException ex) {
+//		Map<String, String> errorMessage = new HashMap<>();
+//		for (ObjectError error : ex.getBindingResult().getAllErrors()) {
+//			String filedName = ((FieldError) error).getField();
+//			String message = error.getDefaultMessage();
+//			errorMessage.put(filedName, message);
+//		}
+//		return new ResponseEntity<Map<String, String>>(errorMessage, HttpStatus.NOT_FOUND);
+//	}
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<String> globalException(Exception exception) {
 		return new ResponseEntity<String>(exception.getMessage(), HttpStatus.BAD_REQUEST);
 	}
-	@ExceptionHandler(InvalidUsername.class)
-	public ResponseEntity<String> getInvalidUsername(InvalidUsername exception) {
-		return new ResponseEntity<String>(exception.getMessage(),HttpStatus.NOT_FOUND);
-	}
-	@ExceptionHandler(InvalidPasswordException.class)
-	public ResponseEntity<String> getInvalidPasswordException(InvalidPasswordException exception) {
-		return new ResponseEntity<String>(exception.getMessage(),HttpStatus.NOT_FOUND);
-	}
-	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ResponseEntity<Map<String, String>> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
-		Map<String, String> resp = new HashMap<>();
-		ex.getBindingResult().getAllErrors().forEach((error)->{
-			String fieldName = ((FieldError) error).getField();
-			String message = error.getDefaultMessage();
-			resp.put(fieldName, message);
-		});
-		return new ResponseEntity<Map<String, String>>(resp, HttpStatus.BAD_REQUEST);
-	}
+
+//	@ExceptionHandler(MethodArgumentNotValidException.class)
+//	public ResponseEntity<Map<String, String>> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+//		Map<String, String> resp = new HashMap<>();
+//		ex.getBindingResult().getAllErrors().forEach((error)->{
+//			String fieldName = ((FieldError) error).getField();
+//			String message = error.getDefaultMessage();
+//			resp.put(fieldName, message);
+//		});
+//		return new ResponseEntity<Map<String, String>>(resp, HttpStatus.BAD_REQUEST);
+//	}
 	@ExceptionHandler(InvalidFileException.class)
 	public ResponseEntity<String> getIInvalidFileException(InvalidFileException exception) {
 		return new ResponseEntity<String>(exception.getMessage(),HttpStatus.NOT_FOUND);
